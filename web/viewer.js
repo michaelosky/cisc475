@@ -190,3 +190,7 @@ if (document.readyState === 'interactive' ||
 } else {
   document.addEventListener('DOMContentLoaded', webViewerLoad, true);
 }
+
+// UI mods
+// Disable right-click context menu for PDF Viewer
+document.addEventListener('contextmenu', event => event.preventDefault());
