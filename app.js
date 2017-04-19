@@ -4,11 +4,24 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var config = require('./config/database'); // get db config file
+var passport = require('passport');
+var mongoose = require('mongoose');
 
 // Import routes
 var index = require('./routes/index');
 var users = require('./routes/users');
 var files = require('./routes/files');
+
+// Use native Node promises
+mongoose.Promise = global.Promise;
+// connect to MongoDB
+mongoose.connect(config.database)
+  .then(() =>  {
+    console.log('connection to db \'' + mongoose.connection.db.s.databaseName + '\' succesful');
+  })
+  .catch((err) => console.error(err));
+
 
 var app = express();
 
@@ -24,6 +37,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Content-Disposition, Accept");
+  next();
+});
+// app.use('/todos',passport.authenticate('jwt', { session: false}), todos);
+// app.use('/auth', auth);
+
+require('./config/passport')(passport);
 
 app.use('/', index);
 app.use('/users', users);
