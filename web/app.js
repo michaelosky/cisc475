@@ -1199,57 +1199,57 @@ var PDFViewerApplication = {
   },
 
   beforePrint: function pdfViewSetupBeforePrint() {
-    if (this.printService) {
-      // There is no way to suppress beforePrint/afterPrint events,
-      // but PDFPrintService may generate double events -- this will ignore
-      // the second event that will be coming from native window.print().
-      return;
-    }
-
-    if (!this.supportsPrinting) {
-      var printMessage = mozL10n.get('printing_not_supported', null,
-          'Warning: Printing is not fully supported by this browser.');
-      this.error(printMessage);
-      return;
-    }
-
-    // The beforePrint is a sync method and we need to know layout before
-    // returning from this method. Ensure that we can get sizes of the pages.
-    if (!this.pdfViewer.pageViewsReady) {
-      var notReadyMessage = mozL10n.get('printing_not_ready', null,
-          'Warning: The PDF is not fully loaded for printing.');
-      window.alert(notReadyMessage);
-      return;
-    }
-
-    var pagesOverview = this.pdfViewer.getPagesOverview();
-    var printContainer = this.appConfig.printContainer;
-    var printService = PDFPrintServiceFactory.instance.createPrintService(
-      this.pdfDocument, pagesOverview, printContainer);
-    this.printService = printService;
-    this.forceRendering();
-
-    printService.layout();
-
-    if (typeof PDFJSDev !== 'undefined' &&
-        PDFJSDev.test('FIREFOX || MOZCENTRAL')) {
-      this.externalServices.reportTelemetry({
-        type: 'print'
-      });
-    }
-  },
-
-  // Whether all pages of the PDF have the same width and height.
-  get hasEqualPageSizes() {
-    var firstPage = this.pdfViewer.getPageView(0);
-    for (var i = 1, ii = this.pagesCount; i < ii; ++i) {
-      var pageView = this.pdfViewer.getPageView(i);
-      if (pageView.width !== firstPage.width ||
-          pageView.height !== firstPage.height) {
-        return false;
-      }
-    }
-    return true;
+  //   if (this.printService) {
+  //     // There is no way to suppress beforePrint/afterPrint events,
+  //     // but PDFPrintService may generate double events -- this will ignore
+  //     // the second event that will be coming from native window.print().
+  //     return;
+  //   }
+	//
+  //   if (!this.supportsPrinting) {
+  //     var printMessage = mozL10n.get('printing_not_supported', null,
+  //         'Warning: Printing is not fully supported by this browser.');
+  //     this.error(printMessage);
+  //     return;
+  //   }
+	//
+  //   // The beforePrint is a sync method and we need to know layout before
+  //   // returning from this method. Ensure that we can get sizes of the pages.
+  //   if (!this.pdfViewer.pageViewsReady) {
+  //     var notReadyMessage = mozL10n.get('printing_not_ready', null,
+  //         'Warning: The PDF is not fully loaded for printing.');
+  //     window.alert(notReadyMessage);
+  //     return;
+  //   }
+	//
+  //   var pagesOverview = this.pdfViewer.getPagesOverview();
+  //   var printContainer = this.appConfig.printContainer;
+  //   var printService = PDFPrintServiceFactory.instance.createPrintService(
+  //     this.pdfDocument, pagesOverview, printContainer);
+  //   this.printService = printService;
+  //   this.forceRendering();
+	//
+  //   printService.layout();
+	//
+  //   if (typeof PDFJSDev !== 'undefined' &&
+  //       PDFJSDev.test('FIREFOX || MOZCENTRAL')) {
+  //     this.externalServices.reportTelemetry({
+  //       type: 'print'
+  //     });
+  //   }
+  // },
+	//
+  // // Whether all pages of the PDF have the same width and height.
+  // get hasEqualPageSizes() {
+  //   var firstPage = this.pdfViewer.getPageView(0);
+  //   for (var i = 1, ii = this.pagesCount; i < ii; ++i) {
+  //     var pageView = this.pdfViewer.getPageView(i);
+  //     if (pageView.width !== firstPage.width ||
+  //         pageView.height !== firstPage.height) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
   },
 
   afterPrint: function pdfViewSetupAfterPrint() {

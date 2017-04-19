@@ -1764,6 +1764,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 @media print {
+
   /* General rules for printing. */
   body {
     background: transparent none;
@@ -1799,6 +1800,10 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   .fileInput {
     display: none;
   }
+	.no-print, .no-print *
+   {
+      display: none !important;
+   }
 
   /* Rules for browsers that support PDF.js printing */
   body[data-pdfjsprinting] #outerContainer {
