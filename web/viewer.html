@@ -37,18 +37,6 @@ See https://github.com/adobe-type-tools/cmap-resources
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.min.css">
     <link rel="stylesheet" href="./styles.css">
-    <style>
-    #view-source {
-      position: fixed;
-      display: block;
-      right: 0;
-      bottom: 0;
-      margin-right: 40px;
-      margin-bottom: 40px;
-      z-index: 900;
-    }
-    </style>
-
 <!--#if FIREFOX || MOZCENTRAL-->
 <!--#include viewer-snippet-firefox-extension.html-->
 <!--#endif-->
@@ -107,7 +95,7 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
           <!-- Navigation -->
           <div class="android-navigation-container">
-            <nav class="android-navigation mdl-navigation">
+            <!-- <nav class="android-navigation mdl-navigation">
               <a class="mdl-navigation__link mdl-typography--text-uppercase" href="">Phones</a>
               <a class="mdl-navigation__link mdl-typography--text-uppercase" href="">Tablets</a>
               <a class="mdl-navigation__link mdl-typography--text-uppercase" href="">Wear</a>
@@ -115,7 +103,7 @@ See https://github.com/adobe-type-tools/cmap-resources
               <a class="mdl-navigation__link mdl-typography--text-uppercase" href="">Auto</a>
               <a class="mdl-navigation__link mdl-typography--text-uppercase" href="">One</a>
               <a class="mdl-navigation__link mdl-typography--text-uppercase" href="">Play</a>
-            </nav>
+            </nav> -->
           </div>
           <span class="android-mobile-title mdl-layout-title">
           </span>
@@ -123,15 +111,12 @@ See https://github.com/adobe-type-tools/cmap-resources
             <i class="material-icons">more_vert</i>
           </button>
           <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect" for="more-button">
-            <li class="mdl-menu__item">5.0 Lollipop</li>
-            <li class="mdl-menu__item">4.4 KitKat</li>
-            <li disabled class="mdl-menu__item">4.3 Jelly Bean</li>
-            <li class="mdl-menu__item">Android History</li>
+            <li class="mdl-menu__item">Instructor Login</li>
           </ul>
         </div>
       </div>
 
-      <div class="android-drawer mdl-layout__drawer">
+      <div class="mdl-layout__drawer">
         <span class="mdl-layout-title">
           Secure Homework
         </span>
@@ -207,17 +192,17 @@ See https://github.com/adobe-type-tools/cmap-resources
               <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
             </button>
 
-            <button id="secondaryOpenFile" class="secondaryToolbarButton openFile visibleLargeView" title="Open File" tabindex="52" data-l10n-id="open_file">
+            <!-- <button id="secondaryOpenFile" class="secondaryToolbarButton openFile visibleLargeView" title="Open File" tabindex="52" data-l10n-id="open_file">
               <span data-l10n-id="open_file_label">Open</span>
-            </button>
+            </button> -->
 
             <button id="secondaryPrint" class="secondaryToolbarButton print visibleMediumView hidden" title="Print" tabindex="53" data-l10n-id="print">
               <span data-l10n-id="print_label">Print</span>
             </button>
 
-            <button id="secondaryDownload" class="secondaryToolbarButton download visibleMediumView hidden" title="Download" tabindex="54" data-l10n-id="download">
+            <!-- <button id="secondaryDownload" class="secondaryToolbarButton download visibleMediumView hidden" title="Download" tabindex="54" data-l10n-id="download">
               <span data-l10n-id="download_label">Download</span>
-            </button>
+            </button> -->
 
             <a href="#" id="secondaryViewBookmark" class="secondaryToolbarButton bookmark visibleSmallView" title="Current view (copy or open in new window)" tabindex="55" data-l10n-id="bookmark">
               <span data-l10n-id="bookmark_label">Current View</span>
@@ -283,17 +268,17 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
                 </button>
 
-                <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
+                <!-- <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
                   <span data-l10n-id="open_file_label">Open</span>
-                </button>
+                </button> -->
 
                 <button id="print" class="toolbarButton print hiddenMediumView hidden" title="Print" tabindex="33" data-l10n-id="print">
                   <span data-l10n-id="print_label">Print</span>
                 </button>
 
-                <button id="download" class="toolbarButton download hiddenMediumView hidden" title="Download" tabindex="34" data-l10n-id="download">
+                <!-- <button id="download" class="toolbarButton download hiddenMediumView hidden" title="Download" tabindex="34" data-l10n-id="download">
                   <span data-l10n-id="download_label">Download</span>
-                </button>
+                </button> -->
                 <a href="#" id="viewBookmark" class="toolbarButton bookmark hiddenSmallView" title="Current view (copy or open in new window)" tabindex="35" data-l10n-id="bookmark">
                   <span data-l10n-id="bookmark_label">Current View</span>
                 </a>
@@ -466,7 +451,6 @@ See https://github.com/adobe-type-tools/cmap-resources
     <!-- END MDL  -->
   </div>
 </div>
-<a href="https://github.com/google/material-design-lite/blob/mdl-1.x/templates/android-dot-com/" target="_blank" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">View Source</a>
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   </body>
 </html>

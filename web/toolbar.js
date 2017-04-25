@@ -55,11 +55,9 @@ var SCALE_SELECT_PADDING = 22;
  * @property {HTMLButtonElement} next - Button to go to the next page.
  * @property {HTMLButtonElement} zoomIn - Button to zoom in the pages.
  * @property {HTMLButtonElement} zoomOut - Button to zoom out the pages.
- * @property {HTMLButtonElement} viewFind - Button to open find bar.
- * @property {HTMLButtonElement} openFile - Button to open a new document.
+ * @property {HTMLButtonElement} viewFind - Button to find bar.
  * @property {HTMLButtonElement} presentationModeButton - Button to switch to
  *   presentation mode.
- * @property {HTMLButtonElement} download - Button to download the document.
  * @property {HTMLAElement} viewBookmark - Element to link current url of
  *   the page view.
  */
@@ -163,16 +161,8 @@ var Toolbar = (function ToolbarClosure() {
         eventBus.dispatch('presentationmode');
       });
 
-      items.openFile.addEventListener('click', function (e) {
-        eventBus.dispatch('openfile');
-      });
-
       items.print.addEventListener('click', function (e) {
         eventBus.dispatch('print');
-      });
-
-      items.download.addEventListener('click', function (e) {
-        eventBus.dispatch('download');
       });
 
       // Suppress context menus for some controls
