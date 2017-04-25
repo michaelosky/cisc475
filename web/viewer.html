@@ -67,6 +67,18 @@ See https://github.com/adobe-type-tools/cmap-resources
 <!--#include viewer-snippet.html-->
 <!--#endif-->
 
+<!--#if Not allowed to download-->
+    <script>
+   $(document).bind('keydown', function(e) {
+     if(e.ctrlKey && (e.which == 83)) {
+        e.preventDefault();
+        return false;
+  }
+});
+    </script>
+<!--#Ban CTRL + S download>
+
+
 <!--#if !MINIFIED -->
     <script src="viewer.js"></script>
 <!--#else-->
