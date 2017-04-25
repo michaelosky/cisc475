@@ -161,10 +161,6 @@ var Toolbar = (function ToolbarClosure() {
         eventBus.dispatch('presentationmode');
       });
 
-      items.print.addEventListener('click', function (e) {
-        eventBus.dispatch('print');
-      });
-
       // Suppress context menus for some controls
       items.scaleSelect.oncontextmenu = noContextMenuHandler;
 

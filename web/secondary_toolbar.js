@@ -39,7 +39,6 @@ var mozL10n = uiUtils.mozL10n;
  *   dynamically by adjusting the 'max-height' CSS property of this DOM element.
  * @property {HTMLButtonElement} presentationModeButton - Button for entering
  *   presentation mode.
- * @property {HTMLButtonElement} printButton - Button to print the document.F
  * @property {HTMLLinkElement} viewBookmarkButton - Button to obtain a bookmark
  *   link to the current location in the document.
  * @property {HTMLButtonElement} firstPageButton - Button to go to the first
@@ -73,7 +72,6 @@ var SecondaryToolbar = (function SecondaryToolbarClosure() {
     this.buttons = [
       { element: options.presentationModeButton, eventName: 'presentationmode',
         close: true },
-      { element: options.printButton, eventName: 'print', close: true },
       { element: options.viewBookmarkButton, eventName: null, close: true },
       { element: options.firstPageButton, eventName: 'firstpage', close: true },
       { element: options.lastPageButton, eventName: 'lastpage', close: true },
