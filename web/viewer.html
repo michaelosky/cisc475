@@ -440,6 +440,18 @@ See https://github.com/adobe-type-tools/cmap-resources
         <p>
           Add File Here...
         </p>
+        <form>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" />
+            <label class="mdl-textfield__label">Name</label>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
+            <input class="mdl-textfield__input" placeholder="File" type="text" id="uploadFile" readonly/>
+            <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+              <i class="material-icons">attach_file</i><input type="file" id="uploadBtn">
+            </div>
+          </div>
+        </form>
       </div>
       <div class="mdl-dialog__actions">
         <button type="button" class="mdl-button close">Upload</button>

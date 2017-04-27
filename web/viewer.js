@@ -196,6 +196,12 @@ if (document.readyState === 'interactive' ||
 // Disable right-click context menu for PDF Viewer
 document.addEventListener('contextmenu', event => event.preventDefault());
 
+// File upload
+document.getElementById("uploadBtn").onchange = function () {
+    document.getElementById("uploadFile").value = this.files[0].name;
+};
+
+
 // // Disable Ctrl + P Printing
 // if ('matchMedia' in window) {
 //     // Chrome, Firefox, and IE 10 support mediaMatch listeners
