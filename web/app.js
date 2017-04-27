@@ -2070,7 +2070,7 @@ function webViewerKeyDown(evt) {
     if (cmd === 1 || cmd === 8) {
       switch (evt.keyCode) {
         case 83: // s
-          PDFViewerApplication.download();
+          //PDFViewerApplication.download();  disables cmd s download functionallity
           handled = true;
           break;
       }

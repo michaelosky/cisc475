@@ -107,11 +107,11 @@ a img{
 
 .android-header {
   overflow: visible;
-  background-color: white;
+  background-color: #254ca5;
 }
 
   .android-header .material-icons {
-    color: #767777 !important;
+    color: #ffffff !important;
   }
 
   .android-header .mdl-layout__drawer-button {
