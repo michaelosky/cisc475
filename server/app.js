@@ -74,7 +74,7 @@ app.post('/', function(req, res){
   var user_id = req.body.user_id;
   var custom_canvas_user_id = req.body.custom_canvas_user_id;
   var roles = req.body.roles;
-  var oauth_key = "9709687f978a6bbc466af16146fdd468"; // from the canvas tutorial, needs to eventually change
+  var oauth_key = "0123456789abcdef"; // from the canvas tutorial, needs to eventually change
   var oauth_nonce = req.body.oauth_nonce;
   var oauth_timestamp = req.body.oauth_timestamp;
   var oauth_signature = req.body.oauth_signature;
@@ -127,8 +127,8 @@ app.post('/', function(req, res){
 });
 
 const httpsOptions = {
-  key: fs.readFileSync('./.localhost-sll/key.pem'),
-  cert: fs.readFileSync('./.localhost-sll/cert.pem')
+  key: fs.readFileSync('./.localhost-ssl/key.pem'),
+  cert: fs.readFileSync('./.localhost-ssl/cert.pem')
 }
 
 const server = https.createServer(httpsOptions, app).listen(port, function(){
