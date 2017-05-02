@@ -418,40 +418,6 @@ var PDFPageView = (function PDFPageViewClosure() {
       }
       this.textLayer = textLayer;
 
-
-
-
-			// WATERMARK CODE from https://github.com/mozilla/pdf.js/issues/3066
-			var canvas=document.createElement('canvas'); //added because no canvas existed
-			var wmCanvas=document.createElement('canvas');
-      wmCanvas.width=canvas.width;
-      wmCanvas.height=canvas.height;
-      wmCanvas.setAttribute("style","position:absolute;border:1px solid black")
-      var wmContext=wmCanvas.getContext('2d');
-      wmContext.globalAlpha=0.4;
-      // setup text for filling
-      wmContext.font = "24px sans-serif" ;
-      wmContext.fillStyle = "black";
-      // get the metrics with font settings
-			// ************** Get Student name here *************
-      var studentName = "Michael McClosky"
-      var metrics = wmContext.measureText(studentName);
-      var width = metrics.width;
-      // height is font size
-      var height = 24;
-
-      // change the origin coordinate to the middle of the context
-      wmContext.translate(canvas.width/2, 15);
-      // rotate the context (so it's rotated around its center)
-      //wmContext.rotate(-Math.atan(origCanvas.height/origCanvas.width));
-      // as the origin is now at the center, just need to center the text
-      wmContext.fillText(studentName,-width/2,height/2);
-
-      if(div.firstChild)
-          div.insertBefore(wmCanvas, div.firstChild);
-      else
-          div.appendChild(wmCanvas);
-			//END WATERMARK
       var renderContinueCallback = null;
       if (this.renderingQueue) {
         renderContinueCallback = function renderContinueCallback(cont) {
