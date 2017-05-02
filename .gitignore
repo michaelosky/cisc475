@@ -8,3 +8,4 @@ node_modules/
 examples/node/svgdump/
 examples/node/pdf2png/*.png
 npm-debug.log
+server/.localhost-ssl

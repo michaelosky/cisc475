@@ -1,5 +1,5 @@
 {
-  "name": "pdf.js",
+  "name": "secure-homework-server",
   "version": "0.8.0",
   "devDependencies": {
     "acorn": "^4.0.11",
@@ -40,5 +40,24 @@
     "type": "git",
     "url": "git://github.com/mozilla/pdf.js.git"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "description": "This is the github repository for all of the code and documentation that we will provide for the assignment.",
+  "bugs": {
+    "url": "https://github.com/mozilla/pdf.js/issues"
+  },
+  "homepage": "https://github.com/mozilla/pdf.js#readme",
+  "main": "server/app.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "test"
+  },
+  "author": "",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "express-json": "^1.0.0",
+    "json": "^9.0.6",
+    "oauth-signature": "^1.3.1"
+  }
 }
