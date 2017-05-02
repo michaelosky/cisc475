@@ -434,28 +434,28 @@ See https://github.com/adobe-type-tools/cmap-resources
     </div> <!-- outerContainer -->
     <div id="printContainer"></div>
     <dialog class="mdl-dialog">
+      <form enctype="multipart/form-data" action="/upload" method="post">
       <h4 class="mdl-dialog__title">Upload File</h4>
       <div class="mdl-dialog__content">
         <p>
           Add File Here...
         </p>
-        <form>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input class="mdl-textfield__input" type="text" />
+            <input class="mdl-textfield__input" type="text" name="title" />
             <label class="mdl-textfield__label">Name</label>
           </div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
             <input class="mdl-textfield__input" placeholder="File" type="text" id="uploadFile" readonly/>
             <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
-              <i class="material-icons">attach_file</i><input type="file" id="uploadBtn">
+              <i class="material-icons">attach_file</i><input type="file" name=pdf id="uploadBtn">
             </div>
           </div>
-        </form>
       </div>
       <div class="mdl-dialog__actions">
-        <button type="button" class="mdl-button close">Upload</button>
+        <button type="submit" class="mdl-button close">Submit</button>
         <button type="button" class="mdl-button cancel">Cancel</button>
       </div>
+    </form>
     </dialog>
 
     <!-- END MDL  -->
