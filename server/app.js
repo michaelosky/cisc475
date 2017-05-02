@@ -9,6 +9,7 @@ const app = express()
 const https = require('https')
 const fs = require('fs')
 const port = 3000
+const path = require('path')
 
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -101,29 +102,32 @@ app.post('/', function(req, res){
   // WILL - OAuth signaure verification should go here.
 
   // If everything is valid, send back a page that echoes the params.
-  res.send(
-  "<p>Post Type: " + type + "</p>" +
-  "<p>Version: " + version + "</p>" +
-  "<p>Resource Link ID: " + resource_link_id + "</p>" +
-  "<p>Context ID: " + context_id + "</p>" +
-  "<p>User ID: " + user_id + "</p>" +
-  "<p>Canvas User ID: " + custom_canvas_user_id + "</p>" +
-  "<p>Roles: " + roles + "</p>" +
-  "<p></p>" +
-  "<p>OAuth Key: " + oauth_key + "</p>" +
-  "<p>OAuth Nonce: " + oauth_nonce + "</p>" +
-  "<p>OAuth Timestamp: " + oauth_timestamp + "</p>" +
-  "<p>OAuth Signature: " + oauth_signature + "</p>" +
-  "<p></p>" +
-  "<p>Person Name Full: " + person_name_full + "</p>" +
-  "<p>Person Contact Email Primary: " + person_contact_email_primary + "</p>" +
-  "<p>Person Name Given: " + person_name_given + "</p>" +
-  "<p>Person Name Family : " + person_name_family + "</p>"+
-  "<p></p>" +
-  "<p>custom_bacon: " + custom_bacon + "</p>" +
-  "<p></p>" +
-  "<p>outcome_service_url: " + outcome_service_url + "</p>"
-);
+//   res.send(
+//   "<p>Post Type: " + type + "</p>" +
+//   "<p>Version: " + version + "</p>" +
+//   "<p>Resource Link ID: " + resource_link_id + "</p>" +
+//   "<p>Context ID: " + context_id + "</p>" +
+//   "<p>User ID: " + user_id + "</p>" +
+//   "<p>Canvas User ID: " + custom_canvas_user_id + "</p>" +
+//   "<p>Roles: " + roles + "</p>" +
+//   "<p></p>" +
+//   "<p>OAuth Key: " + oauth_key + "</p>" +
+//   "<p>OAuth Nonce: " + oauth_nonce + "</p>" +
+//   "<p>OAuth Timestamp: " + oauth_timestamp + "</p>" +
+//   "<p>OAuth Signature: " + oauth_signature + "</p>" +
+//   "<p></p>" +
+//   "<p>Person Name Full: " + person_name_full + "</p>" +
+//   "<p>Person Contact Email Primary: " + person_contact_email_primary + "</p>" +
+//   "<p>Person Name Given: " + person_name_given + "</p>" +
+//   "<p>Person Name Family : " + person_name_family + "</p>"+
+//   "<p></p>" +
+//   "<p>custom_bacon: " + custom_bacon + "</p>" +
+//   "<p></p>" +
+//   "<p>outcome_service_url: " + outcome_service_url + "</p>"
+// );
+
+res.sendFile('viewer.html',{ root: path.join(__dirname, '../web') })
+
 });
 
 const httpsOptions = {
