@@ -10,12 +10,15 @@ const https = require('https')
 const fs = require('fs')
 const port = 3000
 const path = require('path')
+const multer = require('multer')
 
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
+app.set('port', port);
+app.use(express.static(__dirname + '/../web'));
 
 ////////////////////////////////////////////////////////////////////////////////
 // NONCE HISTORY MANAGEMENT
@@ -59,7 +62,7 @@ function isNonceValid(nonce){
 // GET request functionality, need to return the viewer page and applicable
 // parameters? Maybe the post needs to return the page.
 app.get('/', function(req, res){
-  res.send('Hello World!')
+  res.sendFile('viewer.html',{ root: path.join(__dirname, '../web') })
 });
 
 // POST request functionality, parses the POST params, authorizes, and launches.
@@ -129,6 +132,47 @@ app.post('/', function(req, res){
 res.sendFile('viewer.html',{ root: path.join(__dirname, '../web') })
 
 });
+
+
+app.post('/upload', function(req, res){
+  console.log("Upload started.");
+
+  var storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, '../uploads');
+  },
+  filename: function (req, file, callback) {
+    console.log(file);
+    callback(null, file.originalname)
+  }
+});
+
+console.log(req.body)
+console.log(req.body.title)
+console.log(req.body.otherTitle)
+
+var upload = multer({storage: storage}).single('pdf');
+
+
+upload(req, res, function(err) {
+  if(err) {
+    console.log('Error Occured');
+    return;
+  }
+  console.log(req.file);
+  res.redirect('/')
+  res.sendFile('viewer.html',{ root: path.join(__dirname, '../web') })
+  console.log('PDF Uploaded');
+  })
+
+});
+
+
+
+
+
+
+
 
 const httpsOptions = {
   key: fs.readFileSync('./.localhost-ssl/key.pem'),
