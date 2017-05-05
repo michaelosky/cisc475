@@ -4,20 +4,25 @@
 // SERVERSIDE SETUP
 
 const express = require('express')
-const oauthSignature =  require('oauth-signature')
-const app = express()
+const oauthSignature = require('oauth-signature')
 const https = require('https')
 const fs = require('fs')
-const port = 3000
 const path = require('path')
 const multer = require('multer')
+const bodyParser = require('body-parser')
+const multiparty = require('multiparty');
 
-var bodyParser = require('body-parser')
-app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+const app = express()
+const port = 3000
+
+app.set('port', port);
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '../web'));
+
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
   extended: true
 }));
-app.set('port', port);
 app.use(express.static(__dirname + '/../web'));
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +39,7 @@ var nonce_list = new Array(nonce_list_size);
 var nonce_list_index = 0;
 
 // Checks to see if a nonce is valid
-function isNonceValid(nonce){
+function isNonceValid(nonce) {
   // If the nonce is not defined or blank, it's not valid.
   if (nonce === "undefined" || nonce === "") {
     return false;
@@ -59,17 +64,34 @@ function isNonceValid(nonce){
 ////////////////////////////////////////////////////////////////////////////////
 // HTTP REQUEST BEHAVIOR
 
-// GET request functionality, need to return the viewer page and applicable
-// parameters? Maybe the post needs to return the page.
-app.get('/', function(req, res){
-  res.sendFile('viewer.html',{ root: path.join(__dirname, '../web') })
+// GET request functionality, this is what is called on a redirect to '/'
+app.get('/', function(req, res) {
+
+  // Check the query string to see if data has been passed in.
+  var uploadPermissions = req.query.upload;
+  var person_name_full = req.query.user;
+
+  // If we have a name, get rid of the dash from the query string.
+  if (person_name_full != undefined) {
+    person_name_full = person_name_full.split("-").join(" ");
+  }
+
+  // These params are spoofed on get if there's no data.
+  person_name_full = (person_name_full === undefined || uploadPermissions == "undefined") ? "John Smith" : person_name_full;
+  uploadPermissions = (uploadPermissions === undefined || uploadPermissions == "undefined") ? "false" : uploadPermissions;
+
+  // Render the viewer with the parameters.
+  res.render('viewer', {
+    'name': person_name_full,
+    'can_upload': uploadPermissions
+  });
 });
 
 // POST request functionality, parses the POST params, authorizes, and launches.
-app.post('/', function(req, res){
+app.post('/', function(req, res) {
   console.log('Got a post request!')
 
-  // Parse all parameters that are useful
+  // Parse all parameters that might be useful
   var url = req.url
   var type = req.body.lti_message_type;
   var version = req.body.lti_version;
@@ -88,6 +110,7 @@ app.post('/', function(req, res){
   var person_name_family = req.body.lis_person_name_family;
   var custom_bacon = req.body.custom_bacon;
   var outcome_service_url = req.body.lis_outcome_service_url;
+  var uploadPermissions = roles === "Instructor" || roles === "Admin";
 
   // Check if the nonce is valid
   if (!isNonceValid(oauth_nonce)) {
@@ -103,82 +126,90 @@ app.post('/', function(req, res){
   }
 
   // WILL - OAuth signaure verification should go here.
-
   // If everything is valid, send back a page that echoes the params.
-//   res.send(
-//   "<p>Post Type: " + type + "</p>" +
-//   "<p>Version: " + version + "</p>" +
-//   "<p>Resource Link ID: " + resource_link_id + "</p>" +
-//   "<p>Context ID: " + context_id + "</p>" +
-//   "<p>User ID: " + user_id + "</p>" +
-//   "<p>Canvas User ID: " + custom_canvas_user_id + "</p>" +
-//   "<p>Roles: " + roles + "</p>" +
-//   "<p></p>" +
-//   "<p>OAuth Key: " + oauth_key + "</p>" +
-//   "<p>OAuth Nonce: " + oauth_nonce + "</p>" +
-//   "<p>OAuth Timestamp: " + oauth_timestamp + "</p>" +
-//   "<p>OAuth Signature: " + oauth_signature + "</p>" +
-//   "<p></p>" +
-//   "<p>Person Name Full: " + person_name_full + "</p>" +
-//   "<p>Person Contact Email Primary: " + person_contact_email_primary + "</p>" +
-//   "<p>Person Name Given: " + person_name_given + "</p>" +
-//   "<p>Person Name Family : " + person_name_family + "</p>"+
-//   "<p></p>" +
-//   "<p>custom_bacon: " + custom_bacon + "</p>" +
-//   "<p></p>" +
-//   "<p>outcome_service_url: " + outcome_service_url + "</p>"
-// );
+  //   res.send(
+  //   "<p>Post Type: " + type + "</p>" +
+  //   "<p>Version: " + version + "</p>" +
+  //   "<p>Resource Link ID: " + resource_link_id + "</p>" +
+  //   "<p>Context ID: " + context_id + "</p>" +
+  //   "<p>User ID: " + user_id + "</p>" +
+  //   "<p>Canvas User ID: " + custom_canvas_user_id + "</p>" +
+  //   "<p>Roles: " + roles + "</p>" +
+  //   "<p></p>" +
+  //   "<p>OAuth Key: " + oauth_key + "</p>" +
+  //   "<p>OAuth Nonce: " + oauth_nonce + "</p>" +
+  //   "<p>OAuth Timestamp: " + oauth_timestamp + "</p>" +
+  //   "<p>OAuth Signature: " + oauth_signature + "</p>" +
+  //   "<p></p>" +
+  //   "<p>Person Name Full: " + person_name_full + "</p>" +
+  //   "<p>Person Contact Email Primary: " + person_contact_email_primary + "</p>" +
+  //   "<p>Person Name Given: " + person_name_given + "</p>" +
+  //   "<p>Person Name Family : " + person_name_family + "</p>"+
+  //   "<p></p>" +
+  //   "<p>custom_bacon: " + custom_bacon + "</p>" +
+  //   "<p></p>" +
+  //   "<p>outcome_service_url: " + outcome_service_url + "</p>"
+  // );
 
-res.sendFile('viewer.html',{ root: path.join(__dirname, '../web') })
+  // Render the viewer with the parameters.
+  res.render('viewer', {
+    'name': person_name_full,
+    'can_upload': uploadPermissions
+  });
+
+
 
 });
 
-
-app.post('/upload', function(req, res){
+// POST UPLOAD endpoint
+app.post('/upload', function(req, res) {
   console.log("Upload started.");
 
+  // NOTE: Multer has to come before multiparty, I think this is because
+  // multiparty actually modifies the data, making it impossible for multer to
+  // parse it how it wants.
+
+  // Start multer upload block
   var storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, '../uploads');
-  },
-  filename: function (req, file, callback) {
-    console.log(file);
-    callback(null, file.originalname)
-  }
+    destination: function(req, file, callback) {
+      callback(null, '../uploads');
+    },
+    filename: function(req, file, callback) {
+      callback(null, file.originalname)
+    }
+  });
+  var upload = multer({ storage: storage }).single('pdf');
+  upload(req, res, function(err) {
+    if (err) {
+      console.log('Error Occured');
+      return;
+    }
+  });
+  // End multer upload block
+
+  // Parse multipart form data using multiparty
+  var form = new multiparty.Form();
+  form.parse(req, function(err, fields, files) {
+
+    // Get the fields we care about.
+    var customFileName = fields['customFileName'].toString();
+    var canUpload = fields['canUpload'].toString();
+    var user = fields['user'].toString().split(" ").join("-");
+
+    // Redirect to GET '/'
+    res.redirect('/?user=' + user + "&upload=" + canUpload);
+    console.log('PDF Uploaded');
+  });
 });
 
-console.log(req.body)
-console.log(req.body.title)
-console.log(req.body.otherTitle)
-
-var upload = multer({storage: storage}).single('pdf');
-
-
-upload(req, res, function(err) {
-  if(err) {
-    console.log('Error Occured');
-    return;
-  }
-  console.log(req.file);
-  res.redirect('/')
-  res.sendFile('viewer.html',{ root: path.join(__dirname, '../web') })
-  console.log('PDF Uploaded');
-  })
-
-});
-
-
-
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////
+// ACTUALLY RUNNING THE SERVER
 
 const httpsOptions = {
   key: fs.readFileSync('./.localhost-ssl/key.pem'),
   cert: fs.readFileSync('./.localhost-ssl/cert.pem')
 }
 
-const server = https.createServer(httpsOptions, app).listen(port, function(){
+const server = https.createServer(httpsOptions, app).listen(port, function() {
   console.log('server running at ' + port)
 });

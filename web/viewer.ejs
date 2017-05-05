@@ -89,6 +89,7 @@ See https://github.com/adobe-type-tools/cmap-resources
   </head>
 
   <body tabindex="1" class="loadingInProgress">
+
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
       <div class="android-header mdl-layout__header mdl-layout__header--waterfall">
@@ -435,13 +436,15 @@ See https://github.com/adobe-type-tools/cmap-resources
     <div id="printContainer"></div>
     <dialog class="mdl-dialog">
       <form enctype="multipart/form-data" action="/upload" method="post">
+      <input id="user-name" name=user type="text" value="<%= name %>"></h2>
+      <input id="can-upload" name=canUpload type="text" value="<%= can_upload %>"></h2>
       <h4 class="mdl-dialog__title">Upload File</h4>
       <div class="mdl-dialog__content">
         <p>
           Add File Here...
         </p>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input class="mdl-textfield__input" type="text" name="title" />
+            <input class="mdl-textfield__input" type="text" name="customFileName" />
             <label class="mdl-textfield__label">Name</label>
           </div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
