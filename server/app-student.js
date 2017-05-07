@@ -99,12 +99,12 @@ app.post('/', function(req, res) {
   var context_id = req.body.context_id;
   var user_id = req.body.user_id;
   var custom_canvas_user_id = req.body.custom_canvas_user_id;
-  var roles = req.body.roles;
+  var roles = "Student";
   var oauth_key = "0123456789abcdef"; // from the canvas tutorial, needs to eventually change
   var oauth_nonce = req.body.oauth_nonce;
   var oauth_timestamp = req.body.oauth_timestamp;
   var oauth_signature = req.body.oauth_signature;
-  var person_name_full = req.body.lis_person_name_full;
+  var person_name_full = "John Student";
   var person_contact_email_primary = req.body.lis_person_contact_email_primary;
   var person_name_given = req.body.lis_person_name_given;
   var person_name_family = req.body.lis_person_name_family;
@@ -201,29 +201,6 @@ app.post('/upload', function(req, res) {
     console.log('PDF Uploaded');
   });
 });
-
-app.get('/files', function(req, res){
-  console.log("File endpoint hit");
-
-  const uploadsFolder = '../uploads/';
-  var fileNames = ""
-  var first = true;
-
-  fs.readdir(uploadsFolder, (err, files) => {
-    files.forEach(file => {
-      if (first) {
-        fileNames += file.substring(0, file.length - 4);
-        first = false;
-      }
-      else{
-        fileNames = fileNames + ";" + file.substring(0, file.length - 4);
-      }
-    });
-    console.log(fileNames);
-    res.send(fileNames);
-
-  })
-})
 
 ////////////////////////////////////////////////////////////////////////////////
 // ACTUALLY RUNNING THE SERVER

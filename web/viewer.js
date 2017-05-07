@@ -15,7 +15,7 @@
 /* globals chrome */
 
 'use strict';
-
+var FILE_URL = 'https://localhost:3000/files'
 var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
 document.addEventListener('contextmenu', event => event.preventDefault());
 
@@ -170,6 +170,20 @@ function getViewerConfiguration() {
 }
 
 function webViewerLoad() {
+  console.log("webViewerLoad");
+
+  callAjax(FILE_URL, function(res){
+    var fileList = document.getElementById("fileList");
+    var fileNames = res.split(';');
+
+    fileNames.forEach(file =>{
+      var link = document.createElement("a");
+      link.className = 'mdl-navigation__link'
+      link.text = file;
+      fileList.appendChild(link);
+    })
+  })
+
   var config = getViewerConfiguration();
   if (typeof PDFJSDev === 'undefined' || !PDFJSDev.test('PRODUCTION')) {
     Promise.all([SystemJS.import('pdfjs-web/app'),
@@ -183,6 +197,8 @@ function webViewerLoad() {
     window.PDFViewerApplication = pdfjsWebApp.PDFViewerApplication;
     pdfjsWebApp.PDFViewerApplication.run(config);
   }
+
+
 }
 
 if (document.readyState === 'interactive' ||
@@ -200,6 +216,7 @@ document.addEventListener('contextmenu', event => event.preventDefault());
 document.getElementById("uploadBtn").onchange = function () {
     document.getElementById("uploadFile").value = this.files[0].name;
 };
+
 
 
 // // Disable Ctrl + P Printing
@@ -226,3 +243,16 @@ document.getElementById("uploadBtn").onchange = function () {
 //     $(".PrintMessage").hide();
 //     $(".textLayer").show();
 // }
+
+function callAjax(url, callback){
+    var xmlhttp;
+    // compatible with IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function(){
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+            callback(xmlhttp.responseText);
+        }
+    }
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
