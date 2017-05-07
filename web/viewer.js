@@ -16,6 +16,7 @@
 
 'use strict';
 var FILE_URL = 'https://localhost:3000/files'
+var PDF_URL = 'https://localhost:3000/pdf'
 var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
 document.addEventListener('contextmenu', event => event.preventDefault());
 
@@ -80,10 +81,8 @@ function getViewerConfiguration() {
     secondaryToolbar: {
       toolbar: document.getElementById('secondaryToolbar'),
       toggleButton: document.getElementById('secondaryToolbarToggle'),
-      toolbarButtonContainer:
-        document.getElementById('secondaryToolbarButtonContainer'),
-      presentationModeButton:
-        document.getElementById('secondaryPresentationMode'),
+      toolbarButtonContainer: document.getElementById('secondaryToolbarButtonContainer'),
+      presentationModeButton: document.getElementById('secondaryPresentationMode'),
       //openFileButton: document.getElementById('secondaryOpenFile'),
       printButton: document.getElementById('secondaryPrint'),
       downloadButton: document.getElementById('secondaryDownload'),
@@ -172,14 +171,33 @@ function getViewerConfiguration() {
 function webViewerLoad() {
   console.log("webViewerLoad");
 
-  callAjax(FILE_URL, function(res){
+  callAjax(FILE_URL, function(res) {
     var fileList = document.getElementById("fileList");
     var fileNames = res.split(';');
 
-    fileNames.forEach(file =>{
+    fileNames.forEach(file => {
       var link = document.createElement("a");
       link.className = 'mdl-navigation__link'
       link.text = file;
+      link.onclick = function() {
+        var http = new XMLHttpRequest();
+        var params = JSON.stringify({
+          'file': link.text
+        });
+        http.open("POST", PDF_URL, true);
+
+        http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+        http.setRequestHeader("Content-length", params.length);
+        http.setRequestHeader("Connection", "close");
+
+        http.onreadystatechange = function() {
+          if (http.readyState == 4 && http.status == 200) {
+            // ROB - this is where you hook into pdf.js and tell it to view
+            console.log(http.responseText);
+          }
+        }
+        http.send(params);
+      }
       fileList.appendChild(link);
     })
   })
@@ -187,12 +205,13 @@ function webViewerLoad() {
   var config = getViewerConfiguration();
   if (typeof PDFJSDev === 'undefined' || !PDFJSDev.test('PRODUCTION')) {
     Promise.all([SystemJS.import('pdfjs-web/app'),
-                 SystemJS.import('pdfjs-web/pdf_print_service')])
-           .then(function (modules) {
-      var app = modules[0];
-      window.PDFViewerApplication = app.PDFViewerApplication;
-      app.PDFViewerApplication.run(config);
-    });
+        SystemJS.import('pdfjs-web/pdf_print_service')
+      ])
+      .then(function(modules) {
+        var app = modules[0];
+        window.PDFViewerApplication = app.PDFViewerApplication;
+        app.PDFViewerApplication.run(config);
+      });
   } else {
     window.PDFViewerApplication = pdfjsWebApp.PDFViewerApplication;
     pdfjsWebApp.PDFViewerApplication.run(config);
@@ -202,7 +221,7 @@ function webViewerLoad() {
 }
 
 if (document.readyState === 'interactive' ||
-    document.readyState === 'complete') {
+  document.readyState === 'complete') {
   webViewerLoad();
 } else {
   document.addEventListener('DOMContentLoaded', webViewerLoad, true);
@@ -213,8 +232,8 @@ if (document.readyState === 'interactive' ||
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 // File upload
-document.getElementById("uploadBtn").onchange = function () {
-    document.getElementById("uploadFile").value = this.files[0].name;
+document.getElementById("uploadBtn").onchange = function() {
+  document.getElementById("uploadFile").value = this.files[0].name;
 };
 
 
@@ -244,15 +263,15 @@ document.getElementById("uploadBtn").onchange = function () {
 //     $(".textLayer").show();
 // }
 
-function callAjax(url, callback){
-    var xmlhttp;
-    // compatible with IE7+, Firefox, Chrome, Opera, Safari
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function(){
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-            callback(xmlhttp.responseText);
-        }
+function callAjax(url, callback) {
+  var xmlhttp;
+  // compatible with IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      callback(xmlhttp.responseText);
     }
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
+  }
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
 }

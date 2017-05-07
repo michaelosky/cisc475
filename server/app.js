@@ -225,6 +225,16 @@ app.get('/files', function(req, res){
   })
 })
 
+app.post('/pdf', function(req, res){
+  var filePath = "../uploads/" + req.body.file +".pdf";
+  var file = fs.createReadStream(filePath);
+  var stat = fs.statSync(filePath);
+  res.setHeader('Content-Length', stat.size);
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=quote.pdf');
+  file.pipe(res);
+})
+
 ////////////////////////////////////////////////////////////////////////////////
 // ACTUALLY RUNNING THE SERVER
 
