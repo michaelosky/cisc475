@@ -264,7 +264,7 @@ if (process.argv.indexOf('--http') > 0 ) {
 // HELPERS
 
 function generateWatermarkText(string){
-  var ITERATIONS = 100;
+  var ITERATIONS = 1000;
   var result = "";
 
   for (var i = 0; i < ITERATIONS; i++) {
