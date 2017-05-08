@@ -86,11 +86,11 @@ app.get('/', function(req, res) {
   // These params are spoofed on get if there's no data.
   person_name_full = (person_name_full === undefined || uploadPermissions == "undefined") ? "John Smith" : person_name_full;
   uploadPermissions = (uploadPermissions === undefined || uploadPermissions == "undefined") ? "false" : uploadPermissions;
-
   // Render the viewer with the parameters.
   res.render('viewer', {
     'name': person_name_full,
-    'can_upload': uploadPermissions
+    'can_upload': uploadPermissions,
+    'watermark_text': generateWatermarkText(person_name_full)
   });
 });
 
@@ -161,7 +161,8 @@ app.post('/', function(req, res) {
   // Render the viewer with the parameters.
   res.render('viewer', {
     'name': person_name_full,
-    'can_upload': uploadPermissions
+    'can_upload': uploadPermissions,
+    'watermark_text': generateWatermarkText(person_name_full)
   });
 
 
@@ -257,4 +258,18 @@ if (process.argv.indexOf('--http') > 0 ) {
   const server = https.createServer(httpsOptions, app).listen(port, function() {
     console.log('server running at ' + port)
   });
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// HELPERS
+
+function generateWatermarkText(string){
+  var ITERATIONS = 1000;
+  var result = "";
+
+  for (var i = 0; i < ITERATIONS; i++) {
+    result = result + string + " ";
+  }
+  return result;
+
 }
