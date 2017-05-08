@@ -55,9 +55,9 @@ if (typeof PDFJSDev !== 'undefined' && PDFJSDev.test('CHROME || GENERIC')) {
 }
 
 function getViewerConfiguration(filename) {
-  var path = "../uploads/" + filename +".pdf"
+  var path = "../uploads/" + filename + ".pdf"
   if (filename === "") {
-    path = DEFAULT_URL
+    path = ''
   }
   return {
     appContainer: document.body,
