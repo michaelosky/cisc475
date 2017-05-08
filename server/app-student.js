@@ -6,6 +6,7 @@
 const express = require('express')
 const oauthSignature = require('oauth-signature')
 const https = require('https')
+const http = require('http')
 const fs = require('fs')
 const path = require('path')
 const multer = require('multer')
@@ -23,7 +24,13 @@ app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
   extended: true
 }));
-app.use(express.static(__dirname + '/../web'));
+app.use('/node_modules',express.static(path.join(__dirname, '../node_modules')));
+app.use('/web',express.static(path.join(__dirname, '../web')));
+app.use(express.static(path.join(__dirname, '../web')));
+app.use('/systemjs.config.js',express.static(path.join(__dirname, '../systemjs.config.js')));
+app.use('/src', express.static(path.join(__dirname, '../src')));
+app.use('/external', express.static(path.join(__dirname, "../external")))
+app.use('/uploads', express.static(path.join(__dirname, "../uploads")))
 
 ////////////////////////////////////////////////////////////////////////////////
 // NONCE HISTORY MANAGEMENT
@@ -79,11 +86,11 @@ app.get('/', function(req, res) {
   // These params are spoofed on get if there's no data.
   person_name_full = (person_name_full === undefined || uploadPermissions == "undefined") ? "John Smith" : person_name_full;
   uploadPermissions = (uploadPermissions === undefined || uploadPermissions == "undefined") ? "false" : uploadPermissions;
-
   // Render the viewer with the parameters.
   res.render('viewer', {
     'name': person_name_full,
-    'can_upload': uploadPermissions
+    'can_upload': uploadPermissions,
+    'watermark_text': generateWatermarkText(person_name_full)
   });
 });
 
@@ -104,13 +111,14 @@ app.post('/', function(req, res) {
   var oauth_nonce = req.body.oauth_nonce;
   var oauth_timestamp = req.body.oauth_timestamp;
   var oauth_signature = req.body.oauth_signature;
-  var person_name_full = "John Student";
+  var person_name_full = "Jane Smith";
   var person_contact_email_primary = req.body.lis_person_contact_email_primary;
   var person_name_given = req.body.lis_person_name_given;
   var person_name_family = req.body.lis_person_name_family;
   var custom_bacon = req.body.custom_bacon;
   var outcome_service_url = req.body.lis_outcome_service_url;
   var uploadPermissions = roles === "Instructor" || roles === "Admin";
+  console.log(uploadPermissions);
 
   // Check if the nonce is valid
   if (!isNonceValid(oauth_nonce)) {
@@ -154,7 +162,8 @@ app.post('/', function(req, res) {
   // Render the viewer with the parameters.
   res.render('viewer', {
     'name': person_name_full,
-    'can_upload': uploadPermissions
+    'can_upload': uploadPermissions,
+    'watermark_text': generateWatermarkText(person_name_full)
   });
 
 
@@ -192,7 +201,6 @@ app.post('/upload', function(req, res) {
   form.parse(req, function(err, fields, files) {
 
     // Get the fields we care about.
-    var customFileName = fields['customFileName'].toString();
     var canUpload = fields['canUpload'].toString();
     var user = fields['user'].toString().split(" ").join("-");
 
@@ -202,14 +210,66 @@ app.post('/upload', function(req, res) {
   });
 });
 
+app.get('/files', function(req, res){
+  console.log("File endpoint hit");
+
+  const uploadsFolder = '../uploads/';
+  var fileNames = ""
+  var first = true;
+
+  fs.readdir(uploadsFolder, (err, files) => {
+    files.forEach(file => {
+      if (first) {
+        fileNames += file.substring(0, file.length - 4);
+        first = false;
+      }
+      else{
+        fileNames = fileNames + ";" + file.substring(0, file.length - 4);
+      }
+    });
+    console.log(fileNames);
+    res.send(fileNames);
+
+  })
+})
+
+app.post('/pdf', function(req, res){
+  var filePath = "../uploads/" + req.body.file +".pdf";
+  var file = fs.createReadStream(filePath);
+  var stat = fs.statSync(filePath);
+  res.setHeader('Content-Length', stat.size);
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=quote.pdf');
+  file.pipe(res);
+})
+
 ////////////////////////////////////////////////////////////////////////////////
 // ACTUALLY RUNNING THE SERVER
 
-const httpsOptions = {
-  key: fs.readFileSync('./.localhost-ssl/key.pem'),
-  cert: fs.readFileSync('./.localhost-ssl/cert.pem')
+if (process.argv.indexOf('--http') > 0 ) {
+  const server = http.createServer(app).listen(port, function() {
+    console.log('server running at ' + port)
+  });
+} else {
+  const httpsOptions = {
+    key: fs.readFileSync('./.localhost-ssl/key.pem'),
+    cert: fs.readFileSync('./.localhost-ssl/cert.pem')
+  }
+  const server = https.createServer(httpsOptions, app).listen(port, function() {
+    console.log('server running at ' + port)
+  });
 }
 
-const server = https.createServer(httpsOptions, app).listen(port, function() {
-  console.log('server running at ' + port)
-});
+////////////////////////////////////////////////////////////////////////////////
+// HELPERS
+
+function generateWatermarkText(string){
+  var ITERATIONS = 1000;
+  var result = "";
+
+  for (var i = 0; i < ITERATIONS; i++) {
+    result = result + string + " ";
+  }
+  return result;
+
+}

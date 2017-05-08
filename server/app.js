@@ -200,7 +200,6 @@ app.post('/upload', function(req, res) {
   form.parse(req, function(err, fields, files) {
 
     // Get the fields we care about.
-    var customFileName = fields['customFileName'].toString();
     var canUpload = fields['canUpload'].toString();
     var user = fields['user'].toString().split(" ").join("-");
 
