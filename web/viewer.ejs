@@ -109,20 +109,14 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
           <!-- Navigation -->
           <div class="">
-            <nav class="mdl-navigation">
-              <button id="show-dialog" class="mdl-navigation__link mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
+            <nav id="right-nav" class="mdl-navigation">
+              <button id="show-dialog" class="mdl-navigation__link mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" <% if (can_upload == "false") {%>hidden<% } %>>
                 <i class="material-icons">add</i>
               </button>
             </nav>
           </div>
           <span class="mdl-layout-title">
           </span>
-          <button class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" id="more-button">
-            <i class="material-icons">more_vert</i>
-          </button>
-          <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect" for="more-button">
-            <li class="mdl-menu__item">Instructor Login</li>
-          </ul>
         </div>
       </div>
 
@@ -131,9 +125,6 @@ See https://github.com/adobe-type-tools/cmap-resources
           Secure Homework
         </span>
         <nav class="mdl-navigation" id="fileList">
-          <a class="mdl-navigation__link" href="">Homework 1</a>
-          <a class="mdl-navigation__link" href="">Homework 2</a>
-          <!-- <a id="show-dialog" href="" class="mdl-navigation__link">Show Dialog</a> -->
         </nav>
       </div>
 
@@ -440,9 +431,6 @@ See https://github.com/adobe-type-tools/cmap-resources
       <input id="can-upload" name=canUpload type="text" value="<%= can_upload %>"></h2>
       <h4 class="mdl-dialog__title">Upload File</h4>
       <div class="mdl-dialog__content">
-        <p>
-          Add File Here...
-        </p>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input class="mdl-textfield__input" type="text" name="customFileName" />
             <label class="mdl-textfield__label">Name</label>
@@ -478,8 +466,17 @@ See https://github.com/adobe-type-tools/cmap-resources
       e.preventDefault();
       dialog.showModal();
     });
-    dialog.querySelector('.close .cancel').addEventListener('click', function() {
+    dialog.querySelector('.close').addEventListener('click', function() {
       dialog.close();
+      document.getElementById("uploadFile").value = '';
+    });
+    document.getElementById("uploadBtn").addEventListener('change',function (e) {
+      document.getElementById("uploadFile").value = this.files[0].name;
+      e.preventDefault();
+    });
+    dialog.querySelector('.cancel').addEventListener('click', function() {
+      dialog.close();
+      document.getElementById("uploadFile").value = '';
     });
   </script>
   </body>
