@@ -24,7 +24,12 @@ app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
   extended: true
 }));
-app.use(express.static(__dirname + '/../web'));
+app.use('/node_modules',express.static(path.join(__dirname, '../node_modules')));
+app.use('/web',express.static(path.join(__dirname, '../web')));
+app.use(express.static(path.join(__dirname, '../web')));
+app.use('/systemjs.config.js',express.static(path.join(__dirname, '../systemjs.config.js')));
+app.use('/src', express.static(path.join(__dirname, '../src')));
+app.use('/external', express.static(path.join(__dirname, "")))
 
 ////////////////////////////////////////////////////////////////////////////////
 // NONCE HISTORY MANAGEMENT
@@ -238,7 +243,7 @@ app.post('/pdf', function(req, res){
 
 ////////////////////////////////////////////////////////////////////////////////
 // ACTUALLY RUNNING THE SERVER
-console.log(process.argv.indexOf('--http'));
+
 if (process.argv.indexOf('--http') > 0 ) {
   const server = http.createServer(app).listen(port, function() {
     console.log('server running at ' + port)
