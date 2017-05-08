@@ -6,6 +6,7 @@
 const express = require('express')
 const oauthSignature = require('oauth-signature')
 const https = require('https')
+const http = require('http')
 const fs = require('fs')
 const path = require('path')
 const multer = require('multer')
@@ -237,12 +238,17 @@ app.post('/pdf', function(req, res){
 
 ////////////////////////////////////////////////////////////////////////////////
 // ACTUALLY RUNNING THE SERVER
-
-const httpsOptions = {
-  key: fs.readFileSync('./.localhost-ssl/key.pem'),
-  cert: fs.readFileSync('./.localhost-ssl/cert.pem')
+console.log(process.argv.indexOf('--http'));
+if (process.argv.indexOf('--http') > 0 ) {
+  const server = http.createServer(app).listen(port, function() {
+    console.log('server running at ' + port)
+  });
+} else {
+  const httpsOptions = {
+    key: fs.readFileSync('./.localhost-ssl/key.pem'),
+    cert: fs.readFileSync('./.localhost-ssl/cert.pem')
+  }
+  const server = https.createServer(httpsOptions, app).listen(port, function() {
+    console.log('server running at ' + port)
+  });
 }
-
-const server = https.createServer(httpsOptions, app).listen(port, function() {
-  console.log('server running at ' + port)
-});
