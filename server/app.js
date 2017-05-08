@@ -29,7 +29,8 @@ app.use('/web',express.static(path.join(__dirname, '../web')));
 app.use(express.static(path.join(__dirname, '../web')));
 app.use('/systemjs.config.js',express.static(path.join(__dirname, '../systemjs.config.js')));
 app.use('/src', express.static(path.join(__dirname, '../src')));
-app.use('/external', express.static(path.join(__dirname, "")))
+app.use('/external', express.static(path.join(__dirname, "../external")))
+app.use('/uploads', express.static(path.join(__dirname, "../uploads")))
 
 ////////////////////////////////////////////////////////////////////////////////
 // NONCE HISTORY MANAGEMENT

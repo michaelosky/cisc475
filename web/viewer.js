@@ -54,7 +54,11 @@ if (typeof PDFJSDev !== 'undefined' && PDFJSDev.test('CHROME || GENERIC')) {
   require('./pdf_print_service.js');
 }
 
-function getViewerConfiguration() {
+function getViewerConfiguration(filename) {
+  var path = "../uploads/" + filename +".pdf"
+  if (filename === "") {
+    path = DEFAULT_URL
+  }
   return {
     appContainer: document.body,
     mainContainer: document.getElementById('viewerContainer'),
@@ -164,7 +168,7 @@ function getViewerConfiguration() {
     printContainer: document.getElementById('printContainer'),
     openFileInputName: 'fileInput',
     debuggerScriptPath: './debugger.js',
-    defaultUrl: DEFAULT_URL
+    defaultUrl: path
   };
 }
 
@@ -180,29 +184,65 @@ function webViewerLoad() {
       link.className = 'mdl-navigation__link'
       link.text = file;
       link.onclick = function() {
-        var http = new XMLHttpRequest();
-        var params = JSON.stringify({
-          'file': link.text
-        });
-        http.open("POST", PDF_URL, true);
-
-        http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-        http.setRequestHeader("Content-length", params.length);
-        http.setRequestHeader("Connection", "close");
-
-        http.onreadystatechange = function() {
-          if (http.readyState == 4 && http.status == 200) {
-            // ROB - this is where you hook into pdf.js and tell it to view
-            console.log(http.responseText);
-          }
+        console.log("clicked");
+        var config = getViewerConfiguration(link.text);
+        console.log("attempting to open " + link.text + ".pdf");
+        if (typeof PDFJSDev === 'undefined' || !PDFJSDev.test('PRODUCTION')) {
+          Promise.all([SystemJS.import('pdfjs-web/app'),
+              SystemJS.import('pdfjs-web/pdf_print_service')
+            ])
+            .then(function(modules) {
+              var app = modules[0];
+              window.PDFViewerApplication = app.PDFViewerApplication;
+              app.PDFViewerApplication.run(config);
+            });
+        } else {
+          window.PDFViewerApplication = pdfjsWebApp.PDFViewerApplication;
+          pdfjsWebApp.PDFViewerApplication.run(config);
         }
-        http.send(params);
+
+        // PDFJS.getDocument('/uploads/white-clay-map.pdf').then(function(pdfFile) {
+        //   var pageNumber = 1;
+        //   pdfFile.getPage(pageNumber).then(function(page) {
+        //     var scale = 1;
+        //     var viewport = page.getViewport(scale);
+        //     var canvas = document.getElementById('page1');
+        //     var context = canvas.getContext('2d');
+        //
+        //     var renderContext = {
+        //       canvasContext: context,
+        //       viewport: viewport
+        //     };
+        //
+        //     page.render(renderContext);
+        //   });
+
+
+
+
+        // var http = new XMLHttpRequest();
+        // var params = JSON.stringify({
+        //   'file': link.text
+        // });
+        // http.open("POST", PDF_URL, true);
+        //
+        // http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+        // http.setRequestHeader("Content-length", params.length);
+        // http.setRequestHeader("Connection", "close");
+        //
+        // http.onreadystatechange = function() {
+        //   if (http.readyState == 4 && http.status == 200) {
+        //     // ROB - this is where you hook into pdf.js and tell it to view
+        //     console.log(http.responseText);
+        //   }
+        // }
+        // http.send(params);
       }
       fileList.appendChild(link);
     })
   })
 
-  var config = getViewerConfiguration();
+  var config = getViewerConfiguration("");
   if (typeof PDFJSDev === 'undefined' || !PDFJSDev.test('PRODUCTION')) {
     Promise.all([SystemJS.import('pdfjs-web/app'),
         SystemJS.import('pdfjs-web/pdf_print_service')
